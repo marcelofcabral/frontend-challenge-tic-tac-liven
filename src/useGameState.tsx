@@ -6,6 +6,7 @@ import { useState } from "react";
 
 type Player = "X" | "O";
 type GameState = {
+  startingPlayer: Player;
   currentPlayer: Player;
   stepNumber: number;
 };
@@ -16,9 +17,23 @@ let currentBoard = Array(9).fill(null);
 
 const useGameState = () => {
   const [gameState, setGameState] = useState<GameState>({
+    startingPlayer: "X",
     currentPlayer: "X",
     stepNumber: 0
   });
+
+  const resetGameState = () => {
+    currentBoard.forEach((el, i) => (currentBoard[i] = null));
+    setGameState((currentGameState) => {
+      const startingPlayer =
+        currentGameState.startingPlayer === "X" ? "O" : "X";
+      return {
+        startingPlayer,
+        currentPlayer: startingPlayer,
+        stepNumber: 0
+      };
+    });
+  };
 
   const computeMove = (currentPlayer: Player, squareId: any) => {
     let nextPlayer: Player;
@@ -29,6 +44,7 @@ const useGameState = () => {
       nextPlayer = "X";
     }
     setGameState((currentGameState) => ({
+      startingPlayer: currentGameState.startingPlayer,
       currentPlayer: nextPlayer,
       stepNumber: currentGameState.stepNumber + 1
     }));
@@ -37,7 +53,8 @@ const useGameState = () => {
   return {
     gameState,
     currentBoard,
-    computeMove
+    computeMove,
+    resetGameState
   };
 };
 

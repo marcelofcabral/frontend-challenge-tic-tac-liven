@@ -49,3 +49,16 @@ ul {
 .game-info {
   margin-left: 20px;
 }
+
+.replay-button {
+  height: 50px;
+  width: 50px;
+
+  border-radius: 3px;
+  background-color: rgb(120, 217, 138);
+
+  align-items: center;
+  justify-content: center;
+
+  margin-top: 15px;
+}

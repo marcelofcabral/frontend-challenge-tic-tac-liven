@@ -1,6 +1,7 @@
-// import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 import useGameState from "./useGameState";
+import ReplayButton from "./ReplayButton";
 
 function calculateWinner(squares: any) {
   const lines = [
@@ -63,24 +64,51 @@ const Board = ({ squares, onSquareClick }: any) => {
 };
 
 const Game: React.FC = () => {
+  const [gameOver, setGameOver] = useState(false);
+  const winnerRef = useRef(null);
+
   const {
     currentBoard,
     gameState: { stepNumber, currentPlayer },
-    computeMove
+    computeMove,
+    resetGameState
   } = useGameState();
 
+  // after stepNumber is updated, we check if stepNumber == 9.
+  useEffect(() => {
+    if (stepNumber === 9) {
+      setGameOver(true);
+      winnerRef.current = null;
+    }
+  }, [stepNumber]);
+
   const handleSquareClick = (squareId: number) => {
-    if (calculateWinner(currentBoard) || currentBoard[squareId]) {
-      // Game over or square already handled
+    if (currentBoard[squareId] || gameOver) return;
+
+    computeMove(currentPlayer, squareId);
+
+    const winner = calculateWinner(currentBoard);
+
+    if (winner) {
+      winnerRef.current = winner;
+      setGameOver(true);
       return;
     }
-    computeMove(currentPlayer, squareId);
+
+    // checking for stepNumber === 9 here does not work since state changes are batched in React.
+    // the stepNumber variable is most likely not updated yet when the rest of the code after computeMove in this function is ran,
+    // so checking for it here won't work.
+  };
+
+  const handleReplay = () => {
+    setGameOver(false);
+    winnerRef.current = null;
+    resetGameState();
   };
 
   const renderStatusMessage = () => {
-    const winner = calculateWinner(currentBoard);
-    if (winner) {
-      return "Winner: " + winner;
+    if (winnerRef.current) {
+      return "Winner: " + winnerRef.current;
     } else if (stepNumber === 9) {
       return "Draw: Game over";
     } else {
@@ -103,6 +131,7 @@ const Game: React.FC = () => {
         <div className="game-info">
           <div>Current step: {stepNumber}</div>
           <div>{renderStatusMessage()}</div>
+          {gameOver && <ReplayButton onClick={handleReplay} />}
         </div>
       </div>
     </>
