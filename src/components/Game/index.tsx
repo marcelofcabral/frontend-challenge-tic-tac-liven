@@ -1,9 +1,16 @@
+import "./styles.css";
+
 import { useState, useRef, useEffect } from "react";
 
-import useGameState from "./useGameState";
-import ReplayButton from "./ReplayButton";
+import useGameState from "../../hooks/useGameState";
 
-function calculateWinner(squares: any) {
+import ReplayButton from "../ReplayButton";
+import Board from "../Board";
+
+import { SquareId, ValidSquareValues } from "../Square/Square.types";
+import { SquaresArray } from "../Board/Board.types";
+
+function calculateWinner(squares: SquaresArray) {
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
@@ -23,49 +30,10 @@ function calculateWinner(squares: any) {
   return null;
 }
 
-function Square({ id, value, onClick }: any) {
-  return (
-    <button data-testid={`square-${id}`} className="square" onClick={onClick}>
-      {value}
-    </button>
-  );
-}
-
-const Board = ({ squares, onSquareClick }: any) => {
-  const renderSquare = (squareId: number) => {
-    return (
-      <Square
-        id={squareId}
-        value={squares[squareId]}
-        onClick={() => onSquareClick(squareId)}
-      />
-    );
-  };
-
-  return (
-    <div>
-      <div className="board-row">
-        {renderSquare(0)}
-        {renderSquare(1)}
-        {renderSquare(2)}
-      </div>
-      <div className="board-row">
-        {renderSquare(3)}
-        {renderSquare(4)}
-        {renderSquare(5)}
-      </div>
-      <div className="board-row">
-        {renderSquare(6)}
-        {renderSquare(7)}
-        {renderSquare(8)}
-      </div>
-    </div>
-  );
-};
-
 const Game: React.FC = () => {
-  const [gameOver, setGameOver] = useState(false);
-  const winnerRef = useRef(null);
+  console.log("Game rendered");
+  const [gameOver, setGameOver] = useState<boolean>(false);
+  const winnerRef = useRef<ValidSquareValues>(null);
 
   const {
     currentBoard,
@@ -82,7 +50,8 @@ const Game: React.FC = () => {
     }
   }, [stepNumber]);
 
-  const handleSquareClick = (squareId: number) => {
+  const handleSquareClick = (squareId: SquareId) => {
+    console.log("handleSquareClick");
     if (currentBoard[squareId] || gameOver) return;
 
     computeMove(currentPlayer, squareId);
@@ -112,7 +81,7 @@ const Game: React.FC = () => {
     } else if (stepNumber === 9) {
       return "Draw: Game over";
     } else {
-      return "Next player: " + (currentPlayer === "X" ? "❌" : "⭕");
+      return "Next player: " + (currentPlayer === "❌" ? "❌" : "⭕");
     }
   };
 
