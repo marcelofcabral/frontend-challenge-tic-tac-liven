@@ -31,7 +31,6 @@ function calculateWinner(squares: SquaresArray) {
 }
 
 const Game: React.FC = () => {
-  console.log("Game rendered");
   const [gameOver, setGameOver] = useState<boolean>(false);
   const winnerRef = useRef<ValidSquareValues>(null);
 
@@ -51,7 +50,6 @@ const Game: React.FC = () => {
   }, [stepNumber]);
 
   const handleSquareClick = (squareId: SquareId) => {
-    console.log("handleSquareClick");
     if (currentBoard[squareId] || gameOver) return;
 
     computeMove(currentPlayer, squareId);
