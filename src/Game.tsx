@@ -1,6 +1,8 @@
+// import { useState } from "react";
+
 import useGameState from "./useGameState";
 
-function calculateWinner(squares : any) {
+function calculateWinner(squares: any) {
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
@@ -20,7 +22,7 @@ function calculateWinner(squares : any) {
   return null;
 }
 
-function Square({ id, value, onClick } : any) {
+function Square({ id, value, onClick }: any) {
   return (
     <button data-testid={`square-${id}`} className="square" onClick={onClick}>
       {value}
@@ -28,7 +30,7 @@ function Square({ id, value, onClick } : any) {
   );
 }
 
-const Board = ({ squares, onSquareClick } : any) => {
+const Board = ({ squares, onSquareClick }: any) => {
   const renderSquare = (squareId: number) => {
     return (
       <Square
@@ -63,8 +65,7 @@ const Board = ({ squares, onSquareClick } : any) => {
 const Game: React.FC = () => {
   const {
     currentBoard,
-    stepNumber,
-    nextPlayer,
+    gameState: { stepNumber, currentPlayer },
     computeMove
   } = useGameState();
 
@@ -73,7 +74,7 @@ const Game: React.FC = () => {
       // Game over or square already handled
       return;
     }
-    computeMove(nextPlayer, squareId);
+    computeMove(currentPlayer, squareId);
   };
 
   const renderStatusMessage = () => {
@@ -83,7 +84,7 @@ const Game: React.FC = () => {
     } else if (stepNumber === 9) {
       return "Draw: Game over";
     } else {
-      return "Next player: " + (nextPlayer === 'X' ? "❌" : "⭕");
+      return "Next player: " + (currentPlayer === "X" ? "❌" : "⭕");
     }
   };
 
