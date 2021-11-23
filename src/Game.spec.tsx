@@ -1,5 +1,5 @@
 import { render, fireEvent } from "@testing-library/react";
-import Game from "./Game";
+import Game from "./components/Game";
 
 it("renders game headings", () => {
   const { getByText } = render(<Game />);

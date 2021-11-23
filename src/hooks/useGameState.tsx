@@ -4,7 +4,7 @@
 
 import { useState } from "react";
 
-type Player = "X" | "O";
+type Player = "❌" | "⭕";
 type GameState = {
   startingPlayer: Player;
   currentPlayer: Player;
@@ -17,8 +17,8 @@ let currentBoard = Array(9).fill(null);
 
 const useGameState = () => {
   const [gameState, setGameState] = useState<GameState>({
-    startingPlayer: "X",
-    currentPlayer: "X",
+    startingPlayer: "❌",
+    currentPlayer: "❌",
     stepNumber: 0
   });
 
@@ -26,7 +26,7 @@ const useGameState = () => {
     currentBoard.forEach((el, i) => (currentBoard[i] = null));
     setGameState((currentGameState) => {
       const startingPlayer =
-        currentGameState.startingPlayer === "X" ? "O" : "X";
+        currentGameState.startingPlayer === "❌" ? "⭕" : "❌";
       return {
         startingPlayer,
         currentPlayer: startingPlayer,
@@ -38,10 +38,10 @@ const useGameState = () => {
   const computeMove = (currentPlayer: Player, squareId: any) => {
     let nextPlayer: Player;
     currentBoard[squareId] = currentPlayer; // this is where the implementation bug was
-    if (currentPlayer === "X") {
-      nextPlayer = "O";
+    if (currentPlayer === "❌") {
+      nextPlayer = "⭕";
     } else {
-      nextPlayer = "X";
+      nextPlayer = "❌";
     }
     setGameState((currentGameState) => ({
       startingPlayer: currentGameState.startingPlayer,
